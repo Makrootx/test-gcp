@@ -1,0 +1,52 @@
+services:
+  nest-back:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-back
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ACCESS_JWT_EXPIRATION: ${ACCESS_JWT_EXPIRATION}
+      ACCESS_JWT_SECRET: ${ACCESS_JWT_SECRET}
+      REFRESH_JWT_EXPIRATION: ${REFRESH_JWT_EXPIRATION}
+      REFRESH_JWT_SECRET: ${REFRESH_JWT_SECRET}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: nest-back
+    ports:
+      - 3000:3000
+    depends_on:
+      sportsy-database:
+        condition: service_healthy
+    networks:
+      - nest-network
+
+  nest-db:
+    image: postgres:13
+    container_name: nest-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - nest-db:/var/lib/postgresql/data
+    networks:
+      - nest-network
+
+volumes:
+  nest-db:
+
+networks:
+  nest-network:
+    driver: bridge
