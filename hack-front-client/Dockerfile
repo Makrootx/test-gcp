@@ -1,23 +1,21 @@
-# Use official Node.js image
+# Use Node 20
 FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Install dependencies required for React Native Web and Metro
+# Install system deps
 RUN apk add --no-cache bash git python3 make g++
 
-# Copy package.json and package-lock.json first (for caching)
+# Copy package.json first
 COPY package*.json ./
 
-# Install project dependencies
+# Install dependencies (including local expo)
 RUN npm install
 
 # Copy the rest of the app
 COPY . .
 
-# Expose Metro bundler default port
 EXPOSE 19006
 
-# Start the React Native dev server in web mode
+# Start dev server using local Expo CLI
 CMD ["npm", "run", "web"]

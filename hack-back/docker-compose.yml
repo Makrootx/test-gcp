@@ -17,7 +17,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      sportsy-database:
+      nest-db:
         condition: service_healthy
     networks:
       - nest-network
