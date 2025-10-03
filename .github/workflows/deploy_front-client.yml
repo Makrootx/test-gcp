@@ -29,7 +29,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 ${{ secrets.SPOR_VM_USER }}@${{ secrets.SPOR_VM_IP }} << 'EOF'
             set -e
-            cd hack-project
+            cd test-gcp
             git fetch origin
             git reset --hard origin/main-front-client
 
