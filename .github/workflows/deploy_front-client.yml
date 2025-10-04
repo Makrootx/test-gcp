@@ -33,6 +33,8 @@ jobs:
             git fetch origin
             git reset --hard origin/main-front-client
 
+            cd hack-front-client
+            
             docker build -t react-native-app:latest .
 
             docker stop react-native-app || true
